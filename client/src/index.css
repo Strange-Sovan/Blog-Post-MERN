@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 25% 97%;
+    --foreground: 224 31% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 31% 12%;
+    --primary: 247 78% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 247 45% 95%;
+    --secondary-foreground: 247 42% 32%;
+    --muted: 220 20% 94%;
+    --muted-foreground: 220 10% 47%;
+    --accent: 247 45% 95%;
+    --accent-foreground: 247 42% 32%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 18% 89%;
+    --input: 220 18% 89%;
+    --ring: 247 78% 59%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    min-width: 320px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #f2f2fc;
+    background-image:
+      radial-gradient(ellipse at 12% 2%, rgba(118, 95, 230, 0.15), transparent 34rem),
+      radial-gradient(ellipse at 92% 38%, rgba(79, 156, 232, 0.11), transparent 38rem),
+      linear-gradient(135deg, #f3f1ff 0%, #f7f8fc 48%, #edf5ff 100%);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8;
+  }
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-primary;
+  }
+  .surface-card {
+    @apply rounded-2xl border bg-card shadow-sm transition duration-300;
+  }
+  .surface-card:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
+  }
+  .form-label {
+    @apply mb-2 block text-sm font-semibold text-foreground;
+  }
+  .form-textarea {
+    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-sm transition placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary;
+  }
+}
+
+.toast-viewport {
+  position: fixed;
+  z-index: 100;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: min(24rem, calc(100vw - 2rem));
+  gap: 0.75rem;
+}
+
+.toast-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  box-shadow: 0 18px 50px rgba(27, 24, 55, 0.16);
+  animation: toast-in 180ms ease-out;
+}
+
+.toast-success > svg { color: #16a34a; }
+.toast-error > svg { color: hsl(var(--destructive)); }
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 18, 35, 0.48);
+  backdrop-filter: blur(5px);
+  animation: fade-in 150ms ease-out;
+}
+
+.dialog-content {
+  position: fixed;
+  z-index: 81;
+  top: 50%;
+  left: 50%;
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 1.5rem;
+  background: hsl(var(--card));
+  box-shadow: 0 24px 80px rgba(27, 24, 55, 0.24);
+  transform: translate(-50%, -50%);
+  animation: dialog-in 160ms ease-out;
+}
+
+.hero-panel {
+  background: linear-gradient(120deg, #1d1b3a 0%, #312769 47%, #6555d9 100%);
+  box-shadow: 0 24px 65px rgba(49, 39, 105, 0.2);
+}
+
+.upload-zone {
+  border: 1.5px dashed rgba(102, 87, 205, 0.35);
+  background: linear-gradient(140deg, rgba(247, 245, 255, 0.92), rgba(241, 247, 255, 0.92));
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.upload-zone:hover,
+.upload-zone:focus-within {
+  border-color: hsl(var(--primary));
+  background: linear-gradient(140deg, rgba(242, 239, 255, 0.98), rgba(234, 244, 255, 0.98));
+}
+
+.thumbnail-image {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.post-card:hover .thumbnail-image { transform: scale(1.04); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
