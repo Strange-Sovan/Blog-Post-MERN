@@ -47,8 +47,10 @@ export const AppRouter: React.FC = () => (
         </Routes>
         </Suspense>
       </main>
-      <footer className="border-t bg-white/70 py-8 text-center text-sm text-muted-foreground">
-        &copy; {new Date().getFullYear()} BlogMERN. Stories worth sharing.
+      <footer className="border-t border-border/70 bg-white/65 px-4 py-7 text-center text-sm text-muted-foreground backdrop-blur">
+        <span className="font-semibold text-foreground/75">BlogMERN</span>
+        <span className="mx-2 text-border">•</span>
+        &copy; {new Date().getFullYear()} Stories worth sharing.
       </footer>
     </div>
   </BrowserRouter>

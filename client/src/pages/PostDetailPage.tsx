@@ -78,7 +78,7 @@ export const PostDetailPage: React.FC = () => {
             <img src={post.thumbnailUrl} alt={`Cover image for ${post.title}`} className="max-h-[28rem] w-full object-cover" />
           </div>
         )}
-        <div className="p-6 sm:p-10">
+        <div className="p-5 sm:p-10 lg:px-14">
         <button type="button" onClick={() => navigate(-1)} className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-primary"><ArrowLeft size={16} /> Back to stories</button>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
           <div className="flex flex-wrap items-center gap-3">
@@ -119,14 +119,14 @@ export const PostDetailPage: React.FC = () => {
         </div>
 
         <p className="eyebrow mb-3">Community story</p>
-        <h1 className="mb-8 text-4xl font-black leading-tight tracking-tight sm:text-5xl">{post.title}</h1>
+        <h1 className="mb-8 max-w-3xl text-4xl font-black leading-tight tracking-[-0.035em] sm:text-5xl">{post.title}</h1>
         <div className="prose max-w-none whitespace-pre-wrap text-base leading-8 text-foreground/90 sm:text-lg sm:leading-9">
           {post.content}
         </div>
         </div>
       </article>
 
-      <section className="rounded-3xl border bg-white/70 p-6 sm:p-8">
+      <section className="rounded-3xl border border-white/80 bg-white/75 p-5 shadow-[0_8px_28px_rgba(27,31,59,0.05)] sm:p-8">
         <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
           <MessageCircle className="text-primary" size={22} />
           Discussion ({commentMeta?.totalDocs || comments.length})
@@ -153,12 +153,13 @@ export const PostDetailPage: React.FC = () => {
           <div className="p-4 bg-muted/50 rounded-lg text-center mb-8 border">
             <p className="text-sm text-muted-foreground">
               Please{' '}
-              <span
+              <button
+                type="button"
                 onClick={() => navigate('/login')}
-                className="text-primary font-medium hover:underline cursor-pointer"
+                className="font-medium text-primary hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 sign in
-              </span>{' '}
+              </button>{' '}
               to participate in the conversation.
             </p>
           </div>

@@ -14,10 +14,10 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-indigo-200/70 bg-white/80 shadow-sm shadow-indigo-950/[0.03] backdrop-blur-xl">
+    <nav className="navbar-surface sticky top-0 z-50 border-b">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-3 text-lg font-extrabold tracking-tight text-foreground">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/25"><BookOpen size={20} /></span>
+        <Link to="/" className="group flex items-center gap-3 text-lg font-extrabold tracking-tight text-foreground">
+          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/25 transition duration-200 group-hover:-rotate-3 group-hover:scale-105"><BookOpen size={20} /></span>
           <span>Blog<span className="text-primary">MERN</span></span>
         </Link>
 

@@ -34,19 +34,19 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="page-shell">
-      <section className="hero-panel relative mb-14 overflow-hidden rounded-[2rem] px-7 py-12 text-white sm:px-12 sm:py-16">
+      <section className="hero-panel relative mb-12 overflow-hidden rounded-[2rem] px-7 py-12 text-white sm:mb-14 sm:px-12 sm:py-16 lg:px-16">
         <div className="absolute -right-10 -top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
         <div className="relative max-w-2xl">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide text-violet-100">
             <Sparkles size={14} /> A home for curious minds
           </span>
-          <h1 className="text-4xl font-black leading-[1.08] tracking-tight sm:text-6xl">
+          <h1 className="text-4xl font-black leading-[1.08] tracking-[-0.04em] sm:text-6xl">
             Ideas worth reading. <span className="text-violet-200">Stories worth sharing.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-indigo-100 sm:text-lg">
+          <p className="mt-5 max-w-xl text-base leading-7 text-indigo-100/95 sm:text-lg">
             Thoughtful perspectives, practical guides, and fresh inspiration from our community of writers.
           </p>
-          <a href="#stories" className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-indigo-800 transition hover:bg-indigo-50">
+          <a href="#stories" className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-indigo-800 shadow-lg shadow-black/10 transition duration-200 hover:-translate-y-0.5 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40">
             Explore stories <ArrowDown size={16} />
           </a>
         </div>

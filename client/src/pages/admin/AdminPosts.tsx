@@ -46,7 +46,7 @@ export const AdminPosts: React.FC = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="data-table w-full text-sm">
                 <thead>
                   <tr className="border-b text-muted-foreground text-left">
                     <th className="p-3">Title</th>

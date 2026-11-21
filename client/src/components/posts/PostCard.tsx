@@ -19,7 +19,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <Card className="post-card surface-card flex h-full flex-col overflow-hidden">
-      <Link to={`/posts/${post.slug}`} className="group relative block overflow-hidden bg-gradient-to-br from-violet-100 via-indigo-100 to-sky-100">
+      <Link to={`/posts/${post.slug}`} aria-label={`Read ${post.title}`} className="group relative block overflow-hidden bg-gradient-to-br from-violet-100 via-indigo-100 to-sky-100">
         {post.thumbnailUrl ? (
           <img src={post.thumbnailUrl} alt="" loading="lazy" className="thumbnail-image w-full" />
         ) : (
@@ -31,7 +31,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           Journal
         </span>
       </Link>
-      <CardHeader className="flex-1 pb-3">
+      <CardHeader className="flex-1 px-5 pb-3 pt-5 sm:px-6">
         <div className="mb-3 flex items-center justify-between gap-2">
           <Badge variant="secondary">{post.author?.name || 'Anonymous'}</Badge>
           <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Clock3 size={13} />{date}</span>
@@ -42,7 +42,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="px-5 pb-5 pt-0 sm:px-6 sm:pb-6">
         <p className="mb-5 text-sm leading-6 text-muted-foreground">{excerpt}</p>
         <Link
           to={`/posts/${post.slug}`}

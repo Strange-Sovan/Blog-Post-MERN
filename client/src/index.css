@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    --background: 220 25% 97%;
-    --foreground: 224 31% 12%;
+    --background: 225 24% 95%;
+    --foreground: 228 28% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 224 31% 12%;
-    --primary: 247 78% 59%;
+    --card-foreground: 228 28% 14%;
+    --primary: 250 72% 56%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 247 45% 95%;
-    --secondary-foreground: 247 42% 32%;
-    --muted: 220 20% 94%;
-    --muted-foreground: 220 10% 47%;
-    --accent: 247 45% 95%;
-    --accent-foreground: 247 42% 32%;
+    --secondary: 250 48% 96%;
+    --secondary-foreground: 250 45% 36%;
+    --muted: 225 24% 95%;
+    --muted-foreground: 225 11% 46%;
+    --accent: 250 48% 96%;
+    --accent-foreground: 250 45% 36%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 18% 89%;
-    --input: 220 18% 89%;
-    --ring: 247 78% 59%;
-    --radius: 1rem;
+    --border: 225 18% 89%;
+    --input: 225 18% 88%;
+    --ring: 250 72% 56%;
+    --radius: 0.9rem;
   }
 
   .dark {
@@ -49,40 +49,96 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
   body {
     @apply bg-background text-foreground;
     min-width: 320px;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background-color: #f2f2fc;
+    background-color: #eceef5;
     background-image:
-      radial-gradient(ellipse at 12% 2%, rgba(118, 95, 230, 0.15), transparent 34rem),
-      radial-gradient(ellipse at 92% 38%, rgba(79, 156, 232, 0.11), transparent 38rem),
-      linear-gradient(135deg, #f3f1ff 0%, #f7f8fc 48%, #edf5ff 100%);
+      radial-gradient(ellipse at 7% 0%, rgba(129, 111, 240, 0.09), transparent 32rem),
+      radial-gradient(ellipse at 94% 28%, rgba(88, 158, 225, 0.07), transparent 34rem),
+      linear-gradient(145deg, #eeedf7 0%, #f0f1f6 48%, #e9eef5 100%);
     background-attachment: fixed;
+  }
+  ::selection {
+    color: #fff;
+    background: rgba(91, 73, 211, 0.82);
   }
 }
 
 @layer components {
   .page-shell {
-    @apply mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12;
   }
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-primary;
+    @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-primary;
   }
   .surface-card {
-    @apply rounded-2xl border bg-card shadow-sm transition duration-300;
+    @apply rounded-2xl border border-white/80 bg-card shadow-[0_8px_28px_rgba(27,31,59,0.055)] transition duration-300;
   }
   .surface-card:hover {
-    @apply shadow-lg;
-    transform: translateY(-2px);
+    @apply shadow-[0_16px_38px_rgba(27,31,59,0.1)];
+    transform: translateY(-3px);
   }
   .form-label {
     @apply mb-2 block text-sm font-semibold text-foreground;
   }
   .form-textarea {
-    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-sm transition placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary;
+    @apply w-full rounded-xl border border-input bg-white/80 px-4 py-3 text-sm transition duration-200 placeholder:text-muted-foreground/80 focus:border-primary focus:outline-none focus:ring-4 focus:ring-ring/10;
   }
 }
+
+.hero-panel {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 90% 12%, rgba(169, 155, 255, 0.28), transparent 35%),
+    linear-gradient(120deg, #17162f 0%, #292354 48%, #5649b7 100%);
+  box-shadow: 0 24px 65px rgba(49, 39, 105, 0.17);
+}
+
+.hero-panel::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: linear-gradient(105deg, rgba(255,255,255,0.04), transparent 55%);
+  content: "";
+}
+
+.navbar-surface {
+  border-color: rgba(222, 224, 238, 0.82);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 4px 20px rgba(34, 32, 66, 0.035);
+  backdrop-filter: blur(18px);
+}
+
+.post-card {
+  animation: card-in 420ms ease both;
+}
+
+.post-card:nth-child(2) { animation-delay: 45ms; }
+.post-card:nth-child(3) { animation-delay: 90ms; }
+.post-card:nth-child(4) { animation-delay: 135ms; }
+.post-card:nth-child(5) { animation-delay: 180ms; }
+.post-card:nth-child(6) { animation-delay: 225ms; }
+
+.data-table th {
+  background: hsl(var(--muted) / 0.7);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.data-table th:first-child { border-radius: 0.65rem 0 0 0.65rem; }
+.data-table th:last-child { border-radius: 0 0.65rem 0.65rem 0; }
+.data-table tbody tr:last-child { border-bottom: 0; }
 
 .toast-viewport {
   position: fixed;
@@ -134,11 +190,6 @@
   animation: dialog-in 160ms ease-out;
 }
 
-.hero-panel {
-  background: linear-gradient(120deg, #1d1b3a 0%, #312769 47%, #6555d9 100%);
-  box-shadow: 0 24px 65px rgba(49, 39, 105, 0.2);
-}
-
 .upload-zone {
   border: 1.5px dashed rgba(102, 87, 205, 0.35);
   background: linear-gradient(140deg, rgba(247, 245, 255, 0.92), rgba(241, 247, 255, 0.92));
@@ -154,10 +205,15 @@
 .thumbnail-image {
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  transition: transform 500ms ease;
+  transition: transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
 .post-card:hover .thumbnail-image { transform: scale(1.04); }
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(-8px); }
@@ -170,3 +226,24 @@
 }
 
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-panel {
+    border-radius: 1.5rem;
+  }
+
+  .data-table {
+    min-width: 42rem;
+  }
+}
