@@ -29,6 +29,47 @@ A production-grade, full-stack Blog Management System built with the **MERN** st
 - **Shadcn/ui & TailwindCSS**: Accessible, themeable UI components built on top of Radix UI primitives.
 - **Axios Interceptors**: Transparent cookie credential transmission (`withCredentials: true`) and automated token refresh queue.
 
+## 📦 Required Packages
+
+The package versions are maintained in the respective package manifests and
+lockfiles: [`server/package.json`](./server/package.json) and
+[`client/package.json`](./client/package.json). Run `npm install` once in each
+folder; there is no separate root-level package install.
+
+### Backend runtime
+
+| Packages | Purpose |
+|---|---|
+| `express`, `mongoose`, `dotenv` | HTTP API, MongoDB ODM, and environment configuration |
+| `zod`, `bcryptjs`, `jsonwebtoken`, `cookie-parser` | Request validation, password hashing, JWTs, and cookie handling |
+| `cors`, `express-rate-limit`, `multer` | Cross-origin configuration, rate limiting, and thumbnail uploads |
+| `passport`, `passport-google-oauth20`, `passport-facebook` | Google and Facebook OAuth strategies |
+| `nodemailer` | Password-reset email delivery |
+| `morgan`, `winston` | HTTP and application logging |
+| `slugify`, `swagger-ui-express` | URL-friendly post slugs and interactive API documentation |
+
+### Frontend runtime
+
+| Packages | Purpose |
+|---|---|
+| `react`, `react-dom`, `react-router-dom` | React UI and client-side routing |
+| `@tanstack/react-query`, `axios` | Server-state caching and HTTP requests |
+| `react-hook-form`, `@hookform/resolvers`, `zod` | Forms and schema validation |
+| `react-toastify`, `react-icons`, `lucide-react` | Notifications and interface icons |
+| `@radix-ui/react-avatar`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-select`, `@radix-ui/react-separator`, `@radix-ui/react-slot` | Accessible UI primitives |
+| `class-variance-authority`, `clsx`, `tailwind-merge` | Conditional and composable utility classes |
+
+### Development and testing
+
+| Workspace | Packages | Purpose |
+|---|---|---|
+| Server | `typescript`, `ts-node`, `nodemon` | Type checking, TypeScript execution, and development reloads |
+| Server | `jest`, `ts-jest`, `supertest` | Jest tests, TypeScript test transform, and HTTP integration tests |
+| Server | `@types/bcryptjs`, `@types/cookie-parser`, `@types/cors`, `@types/express`, `@types/jest`, `@types/jsonwebtoken`, `@types/morgan`, `@types/multer`, `@types/node`, `@types/nodemailer`, `@types/passport`, `@types/passport-facebook`, `@types/passport-google-oauth20`, `@types/supertest`, `@types/swagger-ui-express` | TypeScript declarations |
+| Client | `vite`, `@vitejs/plugin-react`, `typescript` | Frontend development server and production builds |
+| Client | `tailwindcss`, `autoprefixer`, `postcss` | Styling and CSS build pipeline |
+| Client | `@types/node`, `@types/react`, `@types/react-dom` | TypeScript declarations |
+
 ---
 
 ## 📁 Project Structure
