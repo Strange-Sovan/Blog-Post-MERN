@@ -18,6 +18,14 @@ describe('Auth API Unit / Integration Tests', () => {
       expect(res.body.success).toBe(false);
     });
 
+    it('should reject names containing numbers or special characters', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({ name: 'Jane2 Doe!', email: 'jane@example.com', password: 'Password123' });
+      expect(res.status).toBe(422);
+      expect(res.body.success).toBe(false);
+    });
+
     it('should return 422 for short password without uppercase/digit', async () => {
       const res = await request(app)
         .post('/api/v1/auth/register')
@@ -30,6 +38,24 @@ describe('Auth API Unit / Integration Tests', () => {
   describe('POST /api/v1/auth/login validation', () => {
     it('should return 422 for empty login request', async () => {
       const res = await request(app).post('/api/v1/auth/login').send({});
+      expect(res.status).toBe(422);
+      expect(res.body.success).toBe(false);
+    });
+  });
+
+  describe('Password reset validation', () => {
+    it('should reject forgot-password requests with invalid email', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({ email: 'invalid-email' });
+      expect(res.status).toBe(422);
+      expect(res.body.success).toBe(false);
+    });
+
+    it('should reject reset-password requests with an invalid token', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ token: 'invalid-token', password: 'Password123' });
       expect(res.status).toBe(422);
       expect(res.body.success).toBe(false);
     });

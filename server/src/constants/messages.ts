@@ -9,6 +9,10 @@ export const Messages = {
   AUTH_UNAUTHORIZED: 'You must be logged in to access this resource',
   AUTH_TOKEN_EXPIRED: 'Session expired. Please log in again',
   AUTH_TOKEN_INVALID: 'Invalid token. Please log in again',
+  AUTH_PASSWORD_RESET_REQUESTED: 'If an account exists for that email, a password reset link has been sent.',
+  AUTH_PASSWORD_RESET_SUCCESS: 'Password has been reset successfully. Please sign in.',
+  AUTH_PASSWORD_RESET_INVALID: 'This password reset link is invalid or has expired.',
+  AUTH_EMAIL_NOT_CONFIGURED: 'Password reset email is not configured. Please contact the site administrator.',
 
   // User
   USER_NOT_FOUND: 'User not found',

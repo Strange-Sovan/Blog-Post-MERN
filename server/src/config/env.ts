@@ -15,6 +15,12 @@ interface EnvConfig {
   FACEBOOK_APP_ID: string;
   FACEBOOK_APP_SECRET: string;
   CLIENT_URL: string;
+  SMTP_HOST: string;
+  SMTP_PORT: number;
+  SMTP_SECURE: boolean;
+  SMTP_USER: string;
+  SMTP_PASSWORD: string;
+  SMTP_FROM: string;
 }
 
 const requiredEnvVars = [
@@ -43,5 +49,11 @@ export const env: EnvConfig = {
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID || '',
   FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET || '',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  SMTP_HOST: process.env.SMTP_HOST || '',
+  SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
+  SMTP_SECURE: process.env.SMTP_SECURE === 'true',
+  SMTP_USER: process.env.SMTP_USER || '',
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD || '',
+  SMTP_FROM: process.env.SMTP_FROM || '',
 };
 

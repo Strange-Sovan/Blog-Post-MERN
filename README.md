@@ -113,6 +113,16 @@ The seeder creates an admin account using `ADMIN_EMAIL` and `ADMIN_PASSWORD` fro
 `server/.env`. It also adds sample posts and comments if no active posts exist.
 No default account password is shipped with the project.
 
+Password recovery emails use Gmail SMTP. In `server/.env`, set
+`SMTP_USER` and `SMTP_FROM` to your Gmail address and `SMTP_PASSWORD` to a
+Google App Password (not your regular Gmail password). To create one, enable
+2-Step Verification on the Google account, then create an App Password under
+Google Account → Security. The SMTP host, port, and TLS settings are shown in
+`server/.env.example`. Restart the server after changing the settings.
+
+Reset links expire after one hour and can only be used once. Keep the App
+Password private and never commit `server/.env`.
+
 ---
 
 ## 📖 Interactive Swagger API Documentation
@@ -148,6 +158,8 @@ All API endpoints are prefixed with `/api/v1`.
 |---|---|---|---|
 | `POST` | `/auth/register` | Register new user account | Public (Rate-limited) |
 | `POST` | `/auth/login` | Authenticate with email/password & set cookies | Public (Rate-limited) |
+| `POST` | `/auth/forgot-password` | Email a password reset link | Public (Rate-limited) |
+| `POST` | `/auth/reset-password` | Set a new password using a reset token | Public (Rate-limited) |
 | `POST` | `/auth/refresh` | Rotate access & refresh token cookies | Public (Refresh Cookie) |
 | `POST` | `/auth/logout` | Invalidate refresh token & clear cookies | Authenticated |
 | `GET` | `/auth/me` | Fetch authenticated user profile | Authenticated |

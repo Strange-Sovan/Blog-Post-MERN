@@ -39,7 +39,7 @@ export const AllPostsPage: React.FC = () => {
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow mb-2">From the community</p>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">All stories</h1>
+          <h1 className="text-4xl font-black tracking-tight text-foreground">All stories</h1>
           <p className="mt-2 text-sm text-muted-foreground">Browse the latest stories and ideas from our writers.</p>
         </div>
         <Link
@@ -79,7 +79,7 @@ export const AllPostsPage: React.FC = () => {
                     setLimit(Number(event.currentTarget.value));
                     setPage(1);
                   }}
-                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-700"
+                  className="rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm font-semibold text-card-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:[color-scheme:dark]"
                 >
                   {[5, 10, 20, 50, 100].map((option) => (
                     <option key={option} value={option}>{option}</option>
@@ -92,11 +92,11 @@ export const AllPostsPage: React.FC = () => {
                   size="sm"
                   disabled={!meta.hasPrevPage}
                   onClick={() => setPage((currentPage) => currentPage - 1)}
-                  className="rounded-xl px-5"
+                  className="rounded-xl border-border bg-card px-5 text-card-foreground hover:bg-muted hover:text-foreground"
                 >
                   ← Previous
                 </Button>
-                <span className="rounded-xl border border-white/80 bg-white/80 px-4 py-1.5 text-sm font-semibold text-muted-foreground shadow-sm">
+                <span className="rounded-xl border border-border bg-card px-4 py-1.5 text-sm font-semibold text-card-foreground shadow-sm">
                   Page {meta.page} of {Math.max(meta.totalPages, 1)}
                 </span>
                 <Button
@@ -104,7 +104,7 @@ export const AllPostsPage: React.FC = () => {
                   size="sm"
                   disabled={!meta.hasNextPage}
                   onClick={() => setPage((currentPage) => currentPage + 1)}
-                  className="rounded-xl px-5"
+                  className="rounded-xl border-border bg-card px-5 text-card-foreground hover:bg-muted hover:text-foreground"
                 >
                   Next →
                 </Button>

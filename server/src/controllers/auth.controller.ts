@@ -11,6 +11,8 @@ import {
   refreshUserToken,
   logoutUser,
   oauthLogin,
+  requestPasswordReset,
+  resetPassword,
 } from '../services/auth.service';
 import {
   accessTokenCookieOptions,
@@ -39,6 +41,16 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   const { accessToken, refreshToken, user } = await loginUser(email, password);
   setCookies(res, accessToken, refreshToken);
   ApiResponse.send(res, HttpStatus.OK, Messages.AUTH_LOGIN_SUCCESS, user);
+});
+
+export const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+  await requestPasswordReset(req.body.email);
+  ApiResponse.send(res, HttpStatus.OK, Messages.AUTH_PASSWORD_RESET_REQUESTED);
+});
+
+export const resetPasswordHandler = catchAsync(async (req: Request, res: Response) => {
+  await resetPassword(req.body.token, req.body.password);
+  ApiResponse.send(res, HttpStatus.OK, Messages.AUTH_PASSWORD_RESET_SUCCESS);
 });
 
 export const refresh = catchAsync(async (req: Request, res: Response) => {

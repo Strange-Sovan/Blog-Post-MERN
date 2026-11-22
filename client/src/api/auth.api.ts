@@ -13,6 +13,15 @@ export interface RegisterInput {
   password: string;
 }
 
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  password: string;
+}
+
 export const authApi = {
   register: async (data: RegisterInput) => {
     const res = await axiosInstance.post<IApiResponse<IUser>>('/auth/register', data);
@@ -20,6 +29,14 @@ export const authApi = {
   },
   login: async (data: LoginInput) => {
     const res = await axiosInstance.post<IApiResponse<IUser>>('/auth/login', data);
+    return res.data;
+  },
+  forgotPassword: async (data: ForgotPasswordInput) => {
+    const res = await axiosInstance.post<IApiResponse>('/auth/forgot-password', data);
+    return res.data;
+  },
+  resetPassword: async (data: ResetPasswordInput) => {
+    const res = await axiosInstance.post<IApiResponse>('/auth/reset-password', data);
     return res.data;
   },
   logout: async () => {

@@ -3,6 +3,7 @@ import { PostModel } from '../models/Post.model';
 import { CommentModel } from '../models/Comment.model';
 import { IUser } from '../interfaces/IUser';
 import { IPost } from '../interfaces/IPost';
+import { IComment } from '../interfaces/IComment';
 import { IPaginationMeta } from '../interfaces/IApiResponse';
 import { ApiError } from '../utils/ApiError';
 import { HttpStatus } from '../constants/httpStatus';
@@ -25,6 +26,11 @@ export interface PostsResult {
 }
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+export interface CommentsResult {
+  comments: IComment[];
+  meta: IPaginationMeta;
+}
 
 export const getDashboardStats = async (): Promise<DashboardStats> => {
   const [totalUsers, totalPosts, totalComments] = await Promise.all([
@@ -81,5 +87,32 @@ export const adminDeletePost = async (postId: string): Promise<void> => {
   post.isDeleted = true;
   post.deletedAt = new Date();
   await post.save();
+};
+
+export const getAllComments = async (page: number, limit: number, search = ''): Promise<CommentsResult> => {
+  const skip = (page - 1) * limit;
+  const filter = search
+    ? { content: new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') }
+    : {};
+  const [comments, totalDocs] = await Promise.all([
+    CommentModel.find(filter)
+      .populate('author', 'name email')
+      .populate('post', 'title slug')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    CommentModel.countDocuments(filter),
+  ]);
+  const totalPages = Math.ceil(totalDocs / limit);
+  return {
+    comments,
+    meta: { page, limit, totalDocs, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 },
+  };
+};
+
+export const adminDeleteComment = async (commentId: string): Promise<void> => {
+  const comment = await CommentModel.findById(commentId);
+  if (!comment) throw new ApiError(HttpStatus.NOT_FOUND, Messages.COMMENT_NOT_FOUND);
+  await comment.deleteOne();
 };
 

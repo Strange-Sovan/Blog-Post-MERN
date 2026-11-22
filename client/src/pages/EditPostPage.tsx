@@ -9,7 +9,7 @@ import { postApi } from '@/api/post.api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImagePlus, Save, Upload, X } from 'lucide-react';
+import { MdImage, MdSave, MdUpload, MdClose } from 'react-icons/md';
 import { useToast } from '@/components/ui/toast';
 import { getThumbnailFileError } from '@/lib/thumbnail';
 import { BackButton } from '@/components/ui/BackButton';
@@ -145,15 +145,17 @@ export const EditPostPage: React.FC = () => {
               )}
             </div>
             <div>
-              <label className="form-label inline-flex items-center gap-2"><ImagePlus size={16} /> Story thumbnail <span className="font-normal text-muted-foreground">(optional)</span></label>
+              <label className="form-label inline-flex items-center gap-2"><MdImage size={16} /> Story thumbnail <span className="font-normal text-muted-foreground">(optional)</span></label>
               <div className="upload-zone relative grid min-h-40 place-items-center overflow-hidden rounded-2xl">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  onChange={handleImageChange}
-                  className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
-                  aria-label="Upload a story thumbnail"
-                />
+                {!imagePreview && !thumbnailUrl && (
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    onChange={handleImageChange}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                    aria-label="Upload a story thumbnail"
+                  />
+                )}
                 {imagePreview || thumbnailUrl ? (
                   <>
                     <img src={imagePreview || thumbnailUrl} alt="Thumbnail preview" className="absolute inset-0 h-full w-full object-cover" />
@@ -163,7 +165,7 @@ export const EditPostPage: React.FC = () => {
                   </>
                 ) : (
                   <div className="pointer-events-none px-4 py-6 text-center">
-                    <span className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-2xl bg-white text-primary shadow-sm"><Upload size={19} /></span>
+                    <span className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-2xl bg-white text-primary shadow-sm"><MdUpload size={19} /></span>
                     <p className="text-sm font-bold">Choose a cover image</p>
                     <p className="mt-1 text-xs text-muted-foreground">JPEG, PNG, WebP or GIF · up to 5 MB</p>
                   </div>
@@ -173,7 +175,7 @@ export const EditPostPage: React.FC = () => {
                 <div className="mt-2 flex items-center justify-between gap-3 text-xs text-muted-foreground">
                   <span className="truncate">{imageFile?.name || 'Current thumbnail'}</span>
                   <button type="button" className="inline-flex items-center gap-1 font-semibold text-destructive" onClick={() => { setImageFile(null); setThumbnailUrl(''); }}>
-                    <X size={14} /> Remove
+                    <MdClose size={14} /> Remove
                   </button>
                 </div>
               )}
@@ -187,9 +189,9 @@ export const EditPostPage: React.FC = () => {
 
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={updateMutation.isPending}>
-                {updateMutation.isPending ? 'Saving...' : <><Save size={16} /> Save changes</>}
+                {updateMutation.isPending ? 'Saving...' : <><MdSave size={16} /> Save changes</>}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+              <Button type="button" variant="cancel" onClick={() => navigate(-1)}>
                 Cancel
               </Button>
             </div>

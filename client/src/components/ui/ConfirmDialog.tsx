@@ -43,7 +43,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           </Dialog.Close>
         </div>
         <div className="mt-7 flex justify-end gap-3">
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
+          <Button type="button" variant="cancel" onClick={() => onOpenChange(false)} disabled={isPending}>
             Cancel
           </Button>
           <Button type="button" variant="destructive" onClick={onConfirm} disabled={isPending}>

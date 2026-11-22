@@ -8,8 +8,10 @@ import {
   getDashboardStats,
   getAllUsers,
   getAllPosts,
+  getAllComments,
   adminDeleteUser,
   adminDeletePost,
+  adminDeleteComment,
 } from '../services/admin.service';
 
 export const getDashboardStatsController = catchAsync(async (_req: IAuthRequest, res: Response) => {
@@ -33,6 +35,14 @@ export const getAllPostsController = catchAsync(async (req: IAuthRequest, res: R
   ApiResponse.send(res, HttpStatus.OK, Messages.POSTS_FETCHED, posts, meta);
 });
 
+export const getAllCommentsController = catchAsync(async (req: IAuthRequest, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+  const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+  const { comments, meta } = await getAllComments(page, limit, search);
+  ApiResponse.send(res, HttpStatus.OK, Messages.COMMENTS_FETCHED, comments, meta);
+});
+
 export const deleteUserController = catchAsync(async (req: IAuthRequest, res: Response) => {
   await adminDeleteUser(req.params.id);
   ApiResponse.send(res, HttpStatus.OK, Messages.USER_DELETED);
@@ -41,5 +51,10 @@ export const deleteUserController = catchAsync(async (req: IAuthRequest, res: Re
 export const deletePostController = catchAsync(async (req: IAuthRequest, res: Response) => {
   await adminDeletePost(req.params.id);
   ApiResponse.send(res, HttpStatus.OK, Messages.POST_DELETED);
+});
+
+export const deleteCommentController = catchAsync(async (req: IAuthRequest, res: Response) => {
+  await adminDeleteComment(req.params.id);
+  ApiResponse.send(res, HttpStatus.OK, Messages.COMMENT_DELETED);
 });
 

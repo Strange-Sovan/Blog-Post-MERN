@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { createHash, randomBytes } from 'crypto';
 import { UserModel } from '../models/User.model';
 import { IUser, IUserPayload } from '../interfaces/IUser';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt';
@@ -7,6 +8,7 @@ import { HttpStatus } from '../constants/httpStatus';
 import { Messages } from '../constants/messages';
 import { Role } from '../constants/roles';
 import logger from '../utils/logger';
+import { assertEmailConfigured, sendPasswordResetEmail } from '../utils/email';
 
 export interface AuthTokens {
   accessToken: string;
@@ -63,6 +65,44 @@ export const loginUser = async (
 
   logger.info(`User logged in: ${email}`);
   return { accessToken, refreshToken, user: payload };
+};
+
+export const requestPasswordReset = async (email: string): Promise<void> => {
+  assertEmailConfigured();
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = await UserModel.findOne({ email: normalizedEmail, provider: 'local' });
+  if (!user) return;
+
+  const token = randomBytes(32).toString('hex');
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  user.passwordResetToken = tokenHash;
+  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
+  await user.save();
+
+  try {
+    await sendPasswordResetEmail(user.email, token);
+  } catch (error) {
+    await UserModel.updateOne(
+      { _id: user._id, passwordResetToken: tokenHash },
+      { $unset: { passwordResetToken: 1, passwordResetExpires: 1 } },
+    );
+    throw error;
+  }
+};
+
+export const resetPassword = async (token: string, password: string): Promise<void> => {
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const result = await UserModel.updateOne(
+    { passwordResetToken: tokenHash, passwordResetExpires: { $gt: new Date() } },
+    {
+      $set: { password: hashedPassword },
+      $unset: { passwordResetToken: 1, passwordResetExpires: 1, refreshToken: 1 },
+    },
+  );
+  if (result.modifiedCount !== 1) {
+    throw new ApiError(HttpStatus.BAD_REQUEST, Messages.AUTH_PASSWORD_RESET_INVALID);
+  }
 };
 
 export const refreshUserToken = async (token: string): Promise<AuthTokens> => {

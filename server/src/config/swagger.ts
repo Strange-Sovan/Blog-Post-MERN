@@ -94,6 +94,26 @@ Built with **Node.js, Express, TypeScript, and MongoDB Mongoose**.
           password: { type: 'string', example: 'Password123!' },
         },
       },
+      ForgotPasswordInput: {
+        type: 'object',
+        required: ['email'],
+        properties: {
+          email: { type: 'string', format: 'email', example: 'john@example.com' },
+        },
+      },
+      ResetPasswordInput: {
+        type: 'object',
+        required: ['token', 'password'],
+        properties: {
+          token: { type: 'string', minLength: 64, maxLength: 64, example: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef' },
+          password: {
+            type: 'string',
+            minLength: 8,
+            description: 'At least 8 characters, including one uppercase letter and one number',
+            example: 'Password123!',
+          },
+        },
+      },
       CreatePostInput: {
         type: 'object',
         required: ['title', 'content'],
@@ -186,6 +206,41 @@ Built with **Node.js, Express, TypeScript, and MongoDB Mongoose**.
           required: true,
           content: {
             'application/json': { schema: { $ref: '#/components/schemas/LoginInput' } },
+          },
+        },
+        '/auth/forgot-password': {
+          post: {
+            tags: ['Authentication'],
+            summary: 'Request a password reset email',
+            description: 'Sends a single-use password reset link when a local account exists for the email address.',
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': { schema: { $ref: '#/components/schemas/ForgotPasswordInput' } },
+              },
+            },
+            responses: {
+              200: { description: 'A reset email was sent if an account exists' },
+              422: { description: 'Invalid email address' },
+              503: { description: 'Email delivery is not configured' },
+            },
+          },
+        },
+        '/auth/reset-password': {
+          post: {
+            tags: ['Authentication'],
+            summary: 'Set a new password using a reset token',
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': { schema: { $ref: '#/components/schemas/ResetPasswordInput' } },
+              },
+            },
+            responses: {
+              200: { description: 'Password successfully updated' },
+              400: { description: 'Reset token is invalid or expired' },
+              422: { description: 'Invalid token or password' },
+            },
           },
         },
         responses: {

@@ -3,6 +3,8 @@ import passport from 'passport';
 import {
   register,
   login,
+  forgotPassword,
+  resetPasswordHandler,
   refresh,
   logout,
   getMe,
@@ -13,13 +15,20 @@ import { validate } from '../middleware/validate';
 import { authenticate } from '../middleware/authenticate';
 import { activityLogger } from '../middleware/activityLogger';
 import { authLimiter } from '../middleware/rateLimiter';
-import { registerSchema, loginSchema } from '../validators/auth.validator';
+import {
+  registerSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from '../validators/auth.validator';
 import { env } from '../config/env';
 
 const router = Router();
 
 router.post('/register', authLimiter, validate(registerSchema), register);
 router.post('/login', authLimiter, validate(loginSchema), activityLogger('LOGIN'), login);
+router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), forgotPassword);
+router.post('/reset-password', authLimiter, validate(resetPasswordSchema), resetPasswordHandler);
 router.post('/refresh', refresh);
 router.post('/logout', authenticate, activityLogger('LOGOUT'), logout);
 router.get('/me', authenticate, getMe);
