@@ -24,6 +24,8 @@ export interface PostsResult {
   meta: IPaginationMeta;
 }
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 export const getDashboardStats = async (): Promise<DashboardStats> => {
   const [totalUsers, totalPosts, totalComments] = await Promise.all([
     UserModel.countDocuments(),
@@ -33,11 +35,15 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
   return { totalUsers, totalPosts, totalComments };
 };
 
-export const getAllUsers = async (page: number, limit: number): Promise<UsersResult> => {
+export const getAllUsers = async (page: number, limit: number, search = ''): Promise<UsersResult> => {
   const skip = (page - 1) * limit;
+  const searchRegex = new RegExp(escapeRegExp(search), 'i');
+  const filter = search
+    ? { $or: [{ name: searchRegex }, { email: searchRegex }] }
+    : {};
   const [users, totalDocs] = await Promise.all([
-    UserModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
-    UserModel.countDocuments(),
+    UserModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    UserModel.countDocuments(filter),
   ]);
   const totalPages = Math.ceil(totalDocs / limit);
   return {
@@ -46,11 +52,15 @@ export const getAllUsers = async (page: number, limit: number): Promise<UsersRes
   };
 };
 
-export const getAllPosts = async (page: number, limit: number): Promise<PostsResult> => {
+export const getAllPosts = async (page: number, limit: number, search = ''): Promise<PostsResult> => {
   const skip = (page - 1) * limit;
+  const searchRegex = new RegExp(escapeRegExp(search), 'i');
+  const filter = search
+    ? { $or: [{ title: searchRegex }, { content: searchRegex }] }
+    : {};
   const [posts, totalDocs] = await Promise.all([
-    PostModel.find().populate('author', 'name email').sort({ createdAt: -1 }).skip(skip).limit(limit),
-    PostModel.countDocuments(),
+    PostModel.find(filter).populate('author', 'name email').sort({ createdAt: -1 }).skip(skip).limit(limit),
+    PostModel.countDocuments(filter),
   ]);
   const totalPages = Math.ceil(totalDocs / limit);
   return {

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ImagePlus, PenLine, Sparkles, Upload, X } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { getThumbnailFileError } from '@/lib/thumbnail';
+import { BackButton } from '@/components/ui/BackButton';
 
 const postSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200),
@@ -69,6 +70,7 @@ export const CreatePostPage: React.FC = () => {
 
   return (
     <div className="page-shell max-w-4xl">
+      <BackButton label="Back to previous page" />
       <Card className="overflow-hidden rounded-3xl border-0 shadow-xl shadow-slate-900/5">
         <div className="hero-panel px-7 py-8 text-white sm:px-10">
           <p className="mb-2 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-violet-200"><Sparkles size={14} /> Your next story</p>

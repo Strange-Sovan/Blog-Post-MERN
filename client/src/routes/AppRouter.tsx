@@ -1,57 +1,82 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
+import { AdminLayout } from '@/components/layout/AdminLayout';
+import { PageSkeleton } from '@/components/ui/PageSkeleton';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AdminRoute } from './AdminRoute';
 
-const HomePage = lazy(() => import('@/pages/HomePage').then((module) => ({ default: module.HomePage })));
-const LoginPage = lazy(() => import('@/pages/LoginPage').then((module) => ({ default: module.LoginPage })));
-const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((module) => ({ default: module.RegisterPage })));
-const AuthSuccessPage = lazy(() => import('@/pages/AuthSuccessPage').then((module) => ({ default: module.AuthSuccessPage })));
-const PostDetailPage = lazy(() => import('@/pages/PostDetailPage').then((module) => ({ default: module.PostDetailPage })));
-const CreatePostPage = lazy(() => import('@/pages/CreatePostPage').then((module) => ({ default: module.CreatePostPage })));
-const EditPostPage = lazy(() => import('@/pages/EditPostPage').then((module) => ({ default: module.EditPostPage })));
-const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard').then((module) => ({ default: module.AdminDashboard })));
-const AdminUsers = lazy(() => import('@/pages/admin/AdminUsers').then((module) => ({ default: module.AdminUsers })));
-const AdminPosts = lazy(() => import('@/pages/admin/AdminPosts').then((module) => ({ default: module.AdminPosts })));
+const HomePage = lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })));
+const AllPostsPage = lazy(() => import('@/pages/AllPostsPage').then((m) => ({ default: m.AllPostsPage })));
+const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
+const AuthSuccessPage = lazy(() => import('@/pages/AuthSuccessPage').then((m) => ({ default: m.AuthSuccessPage })));
+const PostDetailPage = lazy(() => import('@/pages/PostDetailPage').then((m) => ({ default: m.PostDetailPage })));
+const CreatePostPage = lazy(() => import('@/pages/CreatePostPage').then((m) => ({ default: m.CreatePostPage })));
+const EditPostPage = lazy(() => import('@/pages/EditPostPage').then((m) => ({ default: m.EditPostPage })));
+const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
+const AdminUsers = lazy(() => import('@/pages/admin/AdminUsers').then((m) => ({ default: m.AdminUsers })));
+const AdminPosts = lazy(() => import('@/pages/admin/AdminPosts').then((m) => ({ default: m.AdminPosts })));
+const AdminComments = lazy(() => import('@/pages/admin/AdminComments').then((m) => ({ default: m.AdminComments })));
+
+// Layout with Navbar + Footer for public/protected pages
+const PublicLayout: React.FC = () => (
+  <div className="min-h-screen flex flex-col bg-background">
+    <Navbar />
+    <main className="flex-1">
+      <Suspense fallback={<PageSkeleton />}>
+        <Outlet />
+      </Suspense>
+    </main>
+    <footer className="border-t border-border/70 bg-white/65 px-4 py-7 text-sm text-muted-foreground backdrop-blur">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-1 sm:flex-row sm:justify-between">
+        <span>
+          <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">BlogMERN</span>
+          {' '}— Stories worth sharing
+        </span>
+        <span>&copy; {new Date().getFullYear()} All rights reserved.</span>
+      </div>
+    </footer>
+  </div>
+);
+
+// Admin layout wrapper with sidebar
+const AdminLayoutWrapper: React.FC = () => (
+  <Suspense fallback={<PageSkeleton />}>
+    <AdminLayout />
+  </Suspense>
+);
 
 export const AppRouter: React.FC = () => (
   <BrowserRouter>
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      <main className="flex-1">
-        <Suspense fallback={<div className="page-shell"><div className="h-56 animate-pulse rounded-3xl bg-muted" /></div>}>
-        <Routes>
-          {/* Public */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/posts/:slug" element={<PostDetailPage />} />
-          <Route path="/auth/success" element={<AuthSuccessPage />} />
+    <Routes>
+      {/* ── Public + Protected routes (with Navbar/Footer) ── */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/posts" element={<AllPostsPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/posts/:slug" element={<PostDetailPage />} />
+        <Route path="/auth/success" element={<AuthSuccessPage />} />
 
-          {/* Protected (Must be logged in) */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/posts/create" element={<CreatePostPage />} />
-            <Route path="/posts/edit/:id" element={<EditPostPage />} />
-          </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/posts/create" element={<CreatePostPage />} />
+          <Route path="/posts/edit/:id" element={<EditPostPage />} />
+        </Route>
+      </Route>
 
-          {/* Admin Protected (Must be admin) */}
-          <Route element={<AdminRoute />}>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/posts" element={<AdminPosts />} />
-          </Route>
+      {/* ── Admin routes (sidebar layout, no public Navbar) ── */}
+      <Route element={<AdminRoute />}>
+        <Route element={<AdminLayoutWrapper />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/posts" element={<AdminPosts />} />
+          <Route path="/admin/comments" element={<AdminComments />} />
+        </Route>
+      </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        </Suspense>
-      </main>
-      <footer className="border-t border-border/70 bg-white/65 px-4 py-7 text-center text-sm text-muted-foreground backdrop-blur">
-        <span className="font-semibold text-foreground/75">BlogMERN</span>
-        <span className="mx-2 text-border">•</span>
-        &copy; {new Date().getFullYear()} Stories worth sharing.
-      </footer>
-    </div>
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   </BrowserRouter>
 );

@@ -14,12 +14,16 @@ export const adminApi = {
     const res = await axiosInstance.get<IApiResponse<DashboardStats>>('/admin/stats');
     return res.data;
   },
-  getUsers: async (page = 1, limit = 10) => {
-    const res = await axiosInstance.get<IApiResponse<IUser[]>>(`/admin/users?page=${page}&limit=${limit}`);
+  getUsers: async (page = 1, limit = 10, search = '') => {
+    const res = await axiosInstance.get<IApiResponse<IUser[]>>(
+      `/admin/users?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    );
     return res.data;
   },
-  getPosts: async (page = 1, limit = 10) => {
-    const res = await axiosInstance.get<IApiResponse<IPost[]>>(`/admin/posts?page=${page}&limit=${limit}`);
+  getPosts: async (page = 1, limit = 10, search = '') => {
+    const res = await axiosInstance.get<IApiResponse<IPost[]>>(
+      `/admin/posts?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    );
     return res.data;
   },
   deleteUser: async (id: string) => {

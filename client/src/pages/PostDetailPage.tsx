@@ -6,8 +6,9 @@ import { useAuthStore } from '@/store/authStore';
 import { CommentItem } from '@/components/comments/CommentItem';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CalendarDays, Edit3, MessageCircle, Trash2 } from 'lucide-react';
+import { CalendarDays, Edit3, MessageCircle, Trash2 } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { BackButton } from '@/components/ui/BackButton';
 
 export const PostDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,7 +21,7 @@ export const PostDetailPage: React.FC = () => {
   const { data: postData, isLoading: postLoading, isError } = usePost(slug!);
   const post = postData?.data;
 
-  const { data: commentsData } = useComments(post?._id || '', commentPage);
+  const { data: commentsData, isLoading: commentsLoading } = useComments(post?._id || '', commentPage);
   const comments = commentsData?.data || [];
   const commentMeta = commentsData?.meta;
 
@@ -50,11 +51,23 @@ export const PostDetailPage: React.FC = () => {
 
   if (postLoading) {
     return (
-      <div className="page-shell max-w-4xl">
-        <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-muted rounded w-3/4" />
-          <div className="h-4 bg-muted rounded w-1/4" />
-          <div className="h-64 bg-muted rounded mt-6" />
+      <div className="page-shell max-w-4xl" role="status" aria-label="Loading post">
+        <span className="sr-only">Loading post...</span>
+        <div className="mb-10 overflow-hidden rounded-2xl bg-white/80 shadow-sm">
+          <div className="h-64 animate-pulse bg-gradient-to-br from-violet-100 to-indigo-100" />
+          <div className="animate-pulse space-y-5 p-6 sm:p-10">
+            <div className="h-4 w-1/4 rounded bg-slate-100" />
+            <div className="h-10 w-3/4 rounded bg-slate-100" />
+            <div className="h-4 w-1/3 rounded bg-violet-100" />
+            <div className="h-4 w-full rounded bg-slate-100" />
+            <div className="h-4 w-full rounded bg-slate-100" />
+            <div className="h-4 w-2/3 rounded bg-slate-100" />
+          </div>
+        </div>
+        <div className="animate-pulse space-y-4 rounded-3xl bg-white/75 p-6 shadow-sm">
+          <div className="h-7 w-40 rounded bg-slate-100" />
+          <div className="h-20 rounded-xl bg-slate-100" />
+          <div className="h-16 rounded-xl bg-slate-100" />
         </div>
       </div>
     );
@@ -79,7 +92,7 @@ export const PostDetailPage: React.FC = () => {
           </div>
         )}
         <div className="p-5 sm:p-10 lg:px-14">
-        <button type="button" onClick={() => navigate(-1)} className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-primary"><ArrowLeft size={16} /> Back to stories</button>
+        <BackButton label="Back to previous page" fallback="/" className="mb-7" />
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant="secondary">{post.author?.name || 'Anonymous'}</Badge>
@@ -165,7 +178,17 @@ export const PostDetailPage: React.FC = () => {
           </div>
         )}
 
-        {comments.length === 0 ? (
+        {commentsLoading ? (
+          <div className="space-y-3" role="status" aria-label="Loading comments">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="animate-pulse rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                <div className="mb-3 h-4 w-1/4 rounded bg-slate-200" />
+                <div className="h-4 w-full rounded bg-slate-200" />
+                <div className="mt-2 h-4 w-2/3 rounded bg-slate-200" />
+              </div>
+            ))}
+          </div>
+        ) : comments.length === 0 ? (
           <p className="text-muted-foreground text-center py-6 text-sm">No comments yet. Join the conversation!</p>
         ) : (
           <>

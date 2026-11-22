@@ -68,6 +68,14 @@ describe('Admin Panel API & RBAC Scenarios', () => {
       expect(Array.isArray(res.body.data)).toBe(true);
       expect(res.body.meta).toBeDefined();
     });
+
+    it('should allow a page size of 100 for Admin', async () => {
+      const res = await request(app)
+        .get('/api/v1/admin/users?page=1&limit=100')
+        .set('Cookie', [`access_token=${adminUserToken}`]);
+      expect(res.status).toBe(200);
+      expect(res.body.meta.limit).toBe(100);
+    });
   });
 
   describe('GET /api/v1/admin/posts', () => {
@@ -89,6 +97,14 @@ describe('Admin Panel API & RBAC Scenarios', () => {
         .set('Cookie', [`access_token=${adminUserToken}`]);
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body.data)).toBe(true);
+    });
+
+    it('should allow a page size of 100 for Admin', async () => {
+      const res = await request(app)
+        .get('/api/v1/admin/posts?page=1&limit=100')
+        .set('Cookie', [`access_token=${adminUserToken}`]);
+      expect(res.status).toBe(200);
+      expect(res.body.meta.limit).toBe(100);
     });
   });
 

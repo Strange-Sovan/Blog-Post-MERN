@@ -1,16 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IPost } from '@/interfaces/IPost';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, Clock3, Image as ImageIcon } from 'lucide-react';
+import { MdArrowForward, MdImage, MdAccessTime } from 'react-icons/md';
+import { RiUserSmileLine } from 'react-icons/ri';
 
 interface PostCardProps {
   post: IPost;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const excerpt = post.content.length > 150 ? `${post.content.slice(0, 150)}...` : post.content;
+  const excerpt = post.content.length > 140 ? `${post.content.slice(0, 140)}...` : post.content;
   const date = new Date(post.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -18,39 +17,62 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
   });
 
   return (
-    <Card className="post-card surface-card flex h-full flex-col overflow-hidden">
-      <Link to={`/posts/${post.slug}`} aria-label={`Read ${post.title}`} className="group relative block overflow-hidden bg-gradient-to-br from-violet-100 via-indigo-100 to-sky-100">
+    <article className="post-card group flex h-full flex-col overflow-hidden rounded-2xl border border-white/80 bg-white/90 shadow-[0_8px_28px_rgba(27,31,59,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(91,73,211,0.13)]">
+      {/* Thumbnail */}
+      <Link
+        to={`/posts/${post.slug}`}
+        aria-label={`Read ${post.title}`}
+        className="relative block overflow-hidden"
+      >
         {post.thumbnailUrl ? (
-          <img src={post.thumbnailUrl} alt="" loading="lazy" className="thumbnail-image w-full" />
+          <img
+            src={post.thumbnailUrl}
+            alt=""
+            loading="lazy"
+            className="thumbnail-image w-full"
+          />
         ) : (
-          <div className="thumbnail-image grid w-full place-items-center text-primary/35">
-            <ImageIcon size={42} strokeWidth={1.2} />
+          <div className="thumbnail-image flex w-full items-center justify-center bg-gradient-to-br from-violet-100 via-indigo-100 to-sky-100 text-indigo-300">
+            <MdImage size={40} strokeWidth={1} />
           </div>
         )}
-        <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-slate-700 shadow-sm backdrop-blur">
+        {/* Category badge */}
+        <span className="absolute bottom-2.5 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-slate-700 shadow-sm backdrop-blur">
           Journal
         </span>
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </Link>
-      <CardHeader className="flex-1 px-5 pb-3 pt-5 sm:px-6">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <Badge variant="secondary">{post.author?.name || 'Anonymous'}</Badge>
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><Clock3 size={13} />{date}</span>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {/* Meta row */}
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-2.5 py-1 text-xs font-bold text-violet-700">
+            <RiUserSmileLine size={13} />
+            {post.author?.name || 'Anonymous'}
+          </span>
+          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+            <MdAccessTime size={13} /> {date}
+          </span>
         </div>
-        <CardTitle className="text-xl leading-snug line-clamp-2">
-          <Link to={`/posts/${post.slug}`} className="hover:text-primary transition-colors">
-            {post.title}
-          </Link>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-5 pb-5 pt-0 sm:px-6 sm:pb-6">
-        <p className="mb-5 text-sm leading-6 text-muted-foreground">{excerpt}</p>
+
+        {/* Title */}
+        <h3 className="mb-2 text-lg font-bold leading-snug line-clamp-2 text-slate-800 group-hover:text-violet-700 transition-colors">
+          <Link to={`/posts/${post.slug}`}>{post.title}</Link>
+        </h3>
+
+        {/* Excerpt */}
+        <p className="mb-4 flex-1 text-sm leading-5 text-muted-foreground line-clamp-3">{excerpt}</p>
+
+        {/* Read more */}
         <Link
           to={`/posts/${post.slug}`}
-          className="inline-flex items-center gap-2 text-sm font-bold text-primary transition-colors hover:gap-3"
+          className="inline-flex items-center gap-2 self-start rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-violet-500/20 transition duration-200 hover:-translate-y-0.5 hover:shadow-violet-500/40"
         >
-          Read story <ArrowUpRight size={16} />
+          Read story <MdArrowForward size={15} />
         </Link>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 };

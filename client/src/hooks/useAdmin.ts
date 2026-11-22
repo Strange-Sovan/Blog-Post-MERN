@@ -9,16 +9,16 @@ export const useAdminStats = () =>
     queryFn: () => adminApi.getStats(),
   });
 
-export const useAdminUsers = (page = 1) =>
+export const useAdminUsers = (page = 1, limit = 10, search = '') =>
   useQuery({
-    queryKey: ['admin', 'users', page],
-    queryFn: () => adminApi.getUsers(page),
+    queryKey: ['admin', 'users', page, limit, search],
+    queryFn: () => adminApi.getUsers(page, limit, search),
   });
 
-export const useAdminPosts = (page = 1) =>
+export const useAdminPosts = (page = 1, limit = 10, search = '') =>
   useQuery({
-    queryKey: ['admin', 'posts', page],
-    queryFn: () => adminApi.getPosts(page),
+    queryKey: ['admin', 'posts', page, limit, search],
+    queryFn: () => adminApi.getPosts(page, limit, search),
   });
 
 export const useAdminDeleteUser = () => {

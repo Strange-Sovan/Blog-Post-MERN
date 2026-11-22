@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImagePlus, Save, Upload, X } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { getThumbnailFileError } from '@/lib/thumbnail';
+import { BackButton } from '@/components/ui/BackButton';
 
 const postSchema = z.object({
   title: z.string().min(3).max(200).optional(),
@@ -100,14 +101,25 @@ export const EditPostPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-12 max-w-3xl">
-        <div className="h-64 bg-muted animate-pulse rounded-lg" />
+      <div className="page-shell max-w-4xl" role="status" aria-label="Loading post editor">
+        <span className="sr-only">Loading post editor...</span>
+        <div className="mb-6 h-8 w-48 animate-pulse rounded-lg bg-violet-100" />
+        <div className="rounded-2xl border border-white/80 bg-white/80 p-6 shadow-sm sm:p-8">
+          <div className="mb-8 h-7 w-1/2 animate-pulse rounded bg-slate-100" />
+          <div className="space-y-6">
+            <div className="h-11 animate-pulse rounded-xl bg-slate-100" />
+            <div className="h-48 animate-pulse rounded-xl bg-slate-100" />
+            <div className="h-40 animate-pulse rounded-2xl bg-gradient-to-br from-violet-50 to-indigo-50" />
+            <div className="h-11 w-36 animate-pulse rounded-xl bg-violet-100" />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="page-shell max-w-4xl">
+      <BackButton label="Back to previous page" />
       <Card className="overflow-hidden rounded-3xl border-0 shadow-xl shadow-slate-900/5">
         <CardHeader className="hero-panel px-7 py-8 text-white sm:px-10">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-violet-200">Refine your story</p>

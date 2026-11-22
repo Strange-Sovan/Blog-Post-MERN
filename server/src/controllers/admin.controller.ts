@@ -19,15 +19,17 @@ export const getDashboardStatsController = catchAsync(async (_req: IAuthRequest,
 
 export const getAllUsersController = catchAsync(async (req: IAuthRequest, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
-  const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
-  const { users, meta } = await getAllUsers(page, limit);
+  const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+  const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+  const { users, meta } = await getAllUsers(page, limit, search);
   ApiResponse.send(res, HttpStatus.OK, Messages.USERS_FETCHED, users, meta);
 });
 
 export const getAllPostsController = catchAsync(async (req: IAuthRequest, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
-  const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
-  const { posts, meta } = await getAllPosts(page, limit);
+  const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+  const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+  const { posts, meta } = await getAllPosts(page, limit, search);
   ApiResponse.send(res, HttpStatus.OK, Messages.POSTS_FETCHED, posts, meta);
 });
 
