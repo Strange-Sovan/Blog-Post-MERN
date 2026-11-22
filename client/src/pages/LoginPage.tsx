@@ -11,7 +11,7 @@ import { HiMail, HiLockClosed } from 'react-icons/hi';
 import { BackButton } from '@/components/ui/BackButton';
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().trim().min(1, 'Email is required').email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
 });
 type LoginForm = z.infer<typeof loginSchema>;
@@ -49,7 +49,7 @@ export const LoginPage: React.FC = () => {
 
           {/* ── Form ── */}
           <div className="bg-card px-8 py-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Email */}
               <div>
                 <label className="form-label inline-flex items-center gap-1.5">

@@ -10,10 +10,10 @@ interface StatCardProps {
   label: string; value?: number; desc: string;
   icon: React.ElementType; grad: string; glow: string;
   href?: string; linkText?: string;
-  loading: boolean; error: boolean;
+  error: boolean;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, desc, icon: Icon, grad, glow, href, linkText, loading, error }) => (
+const StatCard: React.FC<StatCardProps> = ({ label, value, desc, icon: Icon, grad, glow, href, linkText, error }) => (
   <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-6 text-white shadow-lg ${glow}`}>
     <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
     <div className="absolute -bottom-6 -left-6 h-24 w-24 rounded-full bg-white/5 blur-xl" />
@@ -21,8 +21,7 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, desc, icon: Icon, gra
       <div className="flex-1">
         <p className="text-xs font-bold uppercase tracking-widest text-white/65">{label}</p>
         <p className="mt-3 text-5xl font-black tabular-nums" aria-live="polite">
-          {loading ? <span className="inline-block h-11 w-20 animate-pulse rounded-xl bg-white/20" />
-            : error ? '—'
+          {error ? '—'
             : (value ?? 0).toLocaleString()}
         </p>
         <p className="mt-1.5 text-sm text-white/65">{desc}</p>
@@ -40,6 +39,38 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, desc, icon: Icon, gra
   </div>
 );
 
+const DashboardSkeleton: React.FC = () => (
+  <div className="space-y-10" role="status" aria-label="Loading dashboard">
+    <span className="sr-only">Loading dashboard...</span>
+    <div className="grid gap-6 md:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="space-y-4">
+              <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+              <div className="h-11 w-20 animate-pulse rounded-xl bg-muted" />
+              <div className="h-4 w-36 animate-pulse rounded bg-muted" />
+            </div>
+            <div className="h-14 w-14 animate-pulse rounded-2xl bg-muted" />
+          </div>
+          {index < 2 && <div className="mt-5 h-8 w-28 animate-pulse rounded-xl bg-muted" />}
+        </div>
+      ))}
+    </div>
+    <div className="h-12 animate-pulse rounded-xl bg-muted" />
+    <div className="grid gap-5 md:grid-cols-3">
+      {Array.from({ length: 2 }).map((_, index) => (
+        <div key={index} className="space-y-4 rounded-2xl border border-border bg-card p-6">
+          <div className="h-11 w-11 animate-pulse rounded-xl bg-muted" />
+          <div className="h-5 w-36 animate-pulse rounded bg-muted" />
+          <div className="h-4 w-full animate-pulse rounded bg-muted" />
+          <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export const AdminDashboard: React.FC = () => {
   const { data, isLoading, isError, error, refetch } = useAdminStats();
   const { theme, toggleTheme } = useTheme();
@@ -54,7 +85,6 @@ export const AdminDashboard: React.FC = () => {
   const quickLinks = [
     { href: '/admin/users',    icon: MdPeople,  title: 'User Management',      desc: 'Browse, inspect, and moderate all registered user accounts.',           grad: 'from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20', border: 'border-violet-200 dark:border-violet-800', bg: 'from-violet-500 to-indigo-600' },
     { href: '/admin/posts',    icon: MdArticle, title: 'Post Management',       desc: 'Review and moderate all articles submitted across the platform.',       grad: 'from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20',         border: 'border-blue-200 dark:border-blue-800',     bg: 'from-blue-500 to-cyan-600' },
-    { href: '/admin/comments', icon: MdComment, title: 'Comment Moderation',    desc: 'Monitor community responses and keep discussions healthy.',             grad: 'from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20',   border: 'border-emerald-200 dark:border-emerald-800', bg: 'from-emerald-500 to-teal-600' },
   ];
 
   return (
@@ -107,34 +137,37 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Stat cards */}
-      <div className="grid gap-6 md:grid-cols-3">
-        {cards.map((c) => <StatCard key={c.label} {...c} loading={isLoading} error={isError} />)}
-      </div>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-3">
+            {cards.map((c) => <StatCard key={c.label} {...c} error={isError} />)}
+          </div>
 
-      {/* Health banner */}
-      <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
-        <MdTrendingUp size={18} /> Platform healthy — all systems operational
-      </div>
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
+            <MdTrendingUp size={18} /> Platform healthy — all systems operational
+          </div>
 
-      {/* Quick links */}
-      <div className="mt-10 grid gap-5 md:grid-cols-3">
-        {quickLinks.map(({ href, icon: Icon, title, desc, grad, border, bg }) => (
-          <Link key={href} to={href}
-            className={`group flex flex-col gap-4 rounded-2xl bg-gradient-to-br ${grad} border ${border} p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg`}>
-            <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${bg} text-white shadow-md transition-transform duration-200 group-hover:scale-110`}>
-              <Icon size={22} />
-            </span>
-            <div>
-              <h3 className="font-bold text-foreground">{title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-primary">
-              Go to {title} <MdArrowForward size={13} />
-            </span>
-          </Link>
-        ))}
-      </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {quickLinks.map(({ href, icon: Icon, title, desc, grad, border, bg }) => (
+              <Link key={href} to={href}
+                className={`group flex flex-col gap-4 rounded-2xl bg-gradient-to-br ${grad} border ${border} p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg`}>
+                <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${bg} text-white shadow-md transition-transform duration-200 group-hover:scale-110`}>
+                  <Icon size={22} />
+                </span>
+                <div>
+                  <h3 className="font-bold text-foreground">{title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+                </div>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary">
+                  Go to {title} <MdArrowForward size={13} />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

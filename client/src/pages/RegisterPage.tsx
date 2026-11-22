@@ -10,13 +10,14 @@ import { HiMail, HiLockClosed, HiUser } from 'react-icons/hi';
 import { BackButton } from '@/components/ui/BackButton';
 
 const registerSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(50, 'Name must be 50 characters or fewer')
+  name: z.string().trim().min(1, 'Name is required').min(2, 'Name must be at least 2 characters').max(50, 'Name must be 50 characters or fewer')
     .regex(/^[\p{L} ]+$/u, 'Name can only contain letters and spaces'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'At least 8 characters')
+  email: z.string().trim().min(1, 'Email is required').email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required').min(8, 'At least 8 characters')
     .regex(/[A-Z]/, 'One uppercase letter required')
-    .regex(/[0-9]/, 'One number required'),
-  confirmPassword: z.string(),
+    .regex(/[0-9]/, 'One number required')
+    .regex(/[^A-Za-z0-9\s]/, 'One special character required'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
 }).refine((d) => d.password === d.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -60,7 +61,7 @@ export const RegisterPage: React.FC = () => {
 
           {/* ── Form ── */}
           <div className="bg-card px-8 py-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Name */}
               <div>
                 <label className="form-label inline-flex items-center gap-1.5">
@@ -89,13 +90,16 @@ export const RegisterPage: React.FC = () => {
                 </label>
                 <div className="relative">
                   <Input type={showPwd ? 'text' : 'password'}
-                    placeholder="Min 8 chars, 1 uppercase, 1 digit"
+                    placeholder="Create a strong password"
                     {...register('password')} className="form-input pr-12" required />
                   <button type="button" onClick={() => setShowPwd((v) => !v)}
                     className="absolute inset-y-0 right-0 grid w-11 place-items-center text-muted-foreground transition hover:text-primary">
                     {showPwd ? <MdVisibilityOff size={18} /> : <MdVisibility size={18} />}
                   </button>
                 </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  At least 8 characters, with an uppercase letter, a number, and a special character.
+                </p>
                 {errors.password && <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>}
               </div>
 

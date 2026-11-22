@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MdDashboard, MdPeople, MdArticle, MdComment, MdHome, MdMenu, MdClose, MdShield } from 'react-icons/md';
+import { useAuthStore } from '@/store/authStore';
+import { MdDashboard, MdPeople, MdArticle, MdHome, MdMenu, MdClose, MdShield, MdLogout } from 'react-icons/md';
 
 const navItems = [
   { label: 'Dashboard',      href: '/admin',          icon: MdDashboard, grad: 'from-violet-500 to-indigo-600' },
   { label: 'User Management', href: '/admin/users',   icon: MdPeople,    grad: 'from-blue-500 to-cyan-600' },
   { label: 'Post Management', href: '/admin/posts',   icon: MdArticle,   grad: 'from-emerald-500 to-teal-600' },
-  { label: 'Comments',        href: '/admin/comments', icon: MdComment,  grad: 'from-orange-500 to-amber-600' },
 ];
 
 export const AdminSidebar: React.FC = () => {
   const location = useLocation();
+  const { logout } = useAuthStore();
   const [open, setOpen] = useState(false);
 
   return (
@@ -72,6 +73,13 @@ export const AdminSidebar: React.FC = () => {
               </span>
               Back to Site
             </Link>
+            <button type="button" onClick={() => { setOpen(false); void logout(); }}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-white/55 transition hover:bg-white/8 hover:text-white">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/10">
+                <MdLogout size={17} />
+              </span>
+              Logout
+            </button>
           </div>
         </nav>
 

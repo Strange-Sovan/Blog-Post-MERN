@@ -36,7 +36,7 @@ const PublicLayout: React.FC = () => (
       </Suspense>
     </main>
     <footer className="border-t border-border bg-card/70 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-screen-2xl flex-col items-center gap-1 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:justify-between sm:px-5 lg:px-6">
+      <div className="mx-auto flex max-w-screen-2xl flex-col items-center gap-2 px-4 py-6 text-center text-sm text-muted-foreground sm:flex-row sm:justify-center sm:gap-8 sm:px-5 lg:px-6">
         <span>
           <span className="font-black bg-clip-text text-transparent" style={{ backgroundImage: 'var(--grad-primary)' }}>
             BlogMERN

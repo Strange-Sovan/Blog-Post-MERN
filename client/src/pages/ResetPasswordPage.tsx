@@ -11,10 +11,11 @@ import { useResetPassword } from '@/hooks/useAuth';
 import { getApiErrorMessage } from '@/lib/apiError';
 
 const resetPasswordSchema = z.object({
-  password: z.string().min(8, 'At least 8 characters')
+  password: z.string().min(1, 'Password is required').min(8, 'At least 8 characters')
     .regex(/[A-Z]/, 'One uppercase letter required')
-    .regex(/[0-9]/, 'One number required'),
-  confirmPassword: z.string(),
+    .regex(/[0-9]/, 'One number required')
+    .regex(/[^A-Za-z0-9\s]/, 'One special character required'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -49,7 +50,7 @@ export const ResetPasswordPage: React.FC = () => {
               <MdAutoStories size={28} />
             </div>
             <h1 className="text-3xl font-black tracking-tight">Choose a new password</h1>
-            <p className="mt-2 text-sm text-indigo-200">Use at least 8 characters, one uppercase letter, and one number.</p>
+            <p className="mt-2 text-sm text-indigo-200">Use at least 8 characters, including uppercase, number, and special characters.</p>
           </div>
 
           <div className="bg-card px-8 py-8">
@@ -59,7 +60,7 @@ export const ResetPasswordPage: React.FC = () => {
                 <Link to="/forgot-password" className="font-bold text-primary hover:underline">Request a new reset link</Link>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <label htmlFor="new-password" className="form-label inline-flex items-center gap-1.5">
                     <HiLockClosed size={14} className="text-primary" /> New password

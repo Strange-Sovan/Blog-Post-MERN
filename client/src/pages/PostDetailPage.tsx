@@ -77,6 +77,8 @@ export const PostDetailPage: React.FC = () => {
 
   return (
     <div className="page-shell max-w-4xl">
+      <BackButton label="Back" fallback="/" className="mb-4" />
+
       {/* ── Article card ── */}
       <article className="mb-10 overflow-hidden rounded-2xl border border-border bg-card shadow-lg shadow-slate-900/5 dark:shadow-black/25">
         {post.thumbnailUrl && (
@@ -87,8 +89,6 @@ export const PostDetailPage: React.FC = () => {
         )}
 
         <div className="p-6 sm:p-10 lg:px-14">
-          <BackButton label="Back" fallback="/" className="mb-7" />
-
           {/* Meta row */}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
             <div className="flex flex-wrap items-center gap-3">
@@ -103,7 +103,7 @@ export const PostDetailPage: React.FC = () => {
 
             {canModify && (
               <div className="flex gap-2">
-                {isOwner && (
+                {canModify && (
                   <button onClick={() => navigate(`/posts/edit/${post._id}`)}
                     className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:bg-muted">
                     <MdEdit size={14} /> Edit

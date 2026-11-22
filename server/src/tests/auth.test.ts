@@ -33,6 +33,16 @@ describe('Auth API Unit / Integration Tests', () => {
       expect(res.status).toBe(422);
       expect(res.body.success).toBe(false);
     });
+
+    it('should reject passwords without a special character', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({ name: 'Test User', email: 'test@example.com', password: 'Password123 ' });
+      expect(res.status).toBe(422);
+      expect(res.body.errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ field: 'password', message: 'Password must contain at least one special character' }),
+      ]));
+    });
   });
 
   describe('POST /api/v1/auth/login validation', () => {
@@ -58,6 +68,16 @@ describe('Auth API Unit / Integration Tests', () => {
         .send({ token: 'invalid-token', password: 'Password123' });
       expect(res.status).toBe(422);
       expect(res.body.success).toBe(false);
+    });
+
+    it('should reject reset passwords without a special character', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ token: 'a'.repeat(64), password: 'Password123 ' });
+      expect(res.status).toBe(422);
+      expect(res.body.errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ field: 'password', message: 'Password must contain at least one special character' }),
+      ]));
     });
   });
 
