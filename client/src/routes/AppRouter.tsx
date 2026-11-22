@@ -1,11 +1,12 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AdminRoute } from './AdminRoute';
 
 const HomePage        = lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })));
+const NotFoundPage    = lazy(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 const AllPostsPage    = lazy(() => import('@/pages/AllPostsPage').then((m) => ({ default: m.AllPostsPage })));
 const LoginPage       = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const RegisterPage    = lazy(() => import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })));
@@ -69,6 +70,7 @@ export const AppRouter: React.FC = () => (
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/posts/:slug" element={<PostDetailPage />} />
         <Route path="/auth/success" element={<AuthSuccessPage />} />
+        <Route path="*" element={<NotFoundPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/posts/create"    element={<CreatePostPage />} />
@@ -85,8 +87,6 @@ export const AppRouter: React.FC = () => (
           <Route path="/admin/comments"  element={<AdminComments />} />
         </Route>
       </Route>
-
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </BrowserRouter>
 );

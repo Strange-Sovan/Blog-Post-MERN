@@ -33,51 +33,163 @@ A production-grade, full-stack Blog Management System built with the **MERN** st
 
 ## 📁 Project Structure
 
+The following tree lists the source and configuration files. Generated folders
+such as `node_modules`, `dist`, `coverage`, uploads, logs, and local `.env` files
+are intentionally excluded.
+
 ```
 blog_post_mern/
-├── server/                        # Express + TypeScript Backend
+├── client/
 │   ├── src/
-│   │   ├── config/                # DB connection, env parser, OAuth passport
-│   │   ├── constants/             # HTTP status codes, messages, roles
-│   │   ├── controllers/           # HTTP handlers
-│   │   ├── interfaces/            # TypeScript interfaces (IUser, IPost, etc.)
-│   │   ├── middleware/            # Auth, RBAC, Rate limiter, Logger, Zod validator
-│   │   ├── models/                # Mongoose schemas (User, Post, Comment)
-│   │   ├── routes/                # API versioned routes (/api/v1)
-│   │   ├── services/              # Business logic layer
-│   │   ├── utils/                 # ApiError, ApiResponse, catchAsync, JWT, logger
-│   │   ├── validators/            # Zod validation schemas
-│   │   ├── app.ts                 # Express application configuration
-│   │   └── server.ts              # Server bootstrap and lifecycle
-│   ├── tests/                     # Unit and integration test suites
+│   │   ├── api/
+│   │   │   ├── admin.api.ts
+│   │   │   ├── auth.api.ts
+│   │   │   ├── axiosInstance.ts
+│   │   │   ├── comment.api.ts
+│   │   │   └── post.api.ts
+│   │   ├── components/
+│   │   │   ├── comments/CommentItem.tsx
+│   │   │   ├── layout/
+│   │   │   │   ├── AdminLayout.tsx
+│   │   │   │   ├── AdminSidebar.tsx
+│   │   │   │   └── Navbar.tsx
+│   │   │   ├── posts/PostCard.tsx
+│   │   │   └── ui/
+│   │   │       ├── BackButton.tsx
+│   │   │       ├── badge.tsx
+│   │   │       ├── button.tsx
+│   │   │       ├── card.tsx
+│   │   │       ├── ConfirmDialog.tsx
+│   │   │       ├── input.tsx
+│   │   │       ├── PageSkeleton.tsx
+│   │   │       ├── TableSkeleton.tsx
+│   │   │       └── toast.tsx
+│   │   ├── hooks/
+│   │   │   ├── useAdmin.ts
+│   │   │   ├── useAuth.ts
+│   │   │   ├── useComments.ts
+│   │   │   └── usePosts.ts
+│   │   ├── interfaces/
+│   │   │   ├── IApiResponse.ts
+│   │   │   ├── IComment.ts
+│   │   │   ├── IPost.ts
+│   │   │   └── IUser.ts
+│   │   ├── lib/
+│   │   │   ├── apiError.ts
+│   │   │   ├── thumbnail.ts
+│   │   │   └── utils.ts
+│   │   ├── pages/
+│   │   │   ├── admin/
+│   │   │   │   ├── AdminComments.tsx
+│   │   │   │   ├── AdminDashboard.tsx
+│   │   │   │   ├── AdminPosts.tsx
+│   │   │   │   └── AdminUsers.tsx
+│   │   │   ├── AllPostsPage.tsx
+│   │   │   ├── AuthSuccessPage.tsx
+│   │   │   ├── CreatePostPage.tsx
+│   │   │   ├── EditPostPage.tsx
+│   │   │   ├── ForgotPasswordPage.tsx
+│   │   │   ├── HomePage.tsx
+│   │   │   ├── LoginPage.tsx
+│   │   │   ├── NotFoundPage.tsx
+│   │   │   ├── PostDetailPage.tsx
+│   │   │   ├── RegisterPage.tsx
+│   │   │   └── ResetPasswordPage.tsx
+│   │   ├── routes/
+│   │   │   ├── AdminRoute.tsx
+│   │   │   ├── AppRouter.tsx
+│   │   │   └── ProtectedRoute.tsx
+│   │   ├── store/
+│   │   │   ├── authStore.tsx
+│   │   │   └── themeStore.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   ├── index.html
 │   ├── package.json
+│   ├── package-lock.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
+├── server/
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── db.ts
+│   │   │   ├── env.ts
+│   │   │   ├── passport.ts
+│   │   │   └── swagger.ts
+│   │   ├── constants/
+│   │   │   ├── httpStatus.ts
+│   │   │   ├── messages.ts
+│   │   │   └── roles.ts
+│   │   ├── controllers/
+│   │   │   ├── admin.controller.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── comment.controller.ts
+│   │   │   └── post.controller.ts
+│   │   ├── interfaces/
+│   │   │   ├── IApiResponse.ts
+│   │   │   ├── IComment.ts
+│   │   │   ├── IPost.ts
+│   │   │   ├── IRequest.ts
+│   │   │   └── IUser.ts
+│   │   ├── middleware/
+│   │   │   ├── activityLogger.ts
+│   │   │   ├── authenticate.ts
+│   │   │   ├── authorize.ts
+│   │   │   ├── errorHandler.ts
+│   │   │   ├── rateLimiter.ts
+│   │   │   ├── uploadThumbnail.ts
+│   │   │   └── validate.ts
+│   │   ├── models/
+│   │   │   ├── Comment.model.ts
+│   │   │   ├── Post.model.ts
+│   │   │   └── User.model.ts
+│   │   ├── routes/
+│   │   │   ├── admin.routes.ts
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── comment.routes.ts
+│   │   │   ├── index.ts
+│   │   │   └── post.routes.ts
+│   │   ├── seeders/adminSeeder.ts
+│   │   ├── services/
+│   │   │   ├── admin.service.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── comment.service.ts
+│   │   │   └── post.service.ts
+│   │   ├── tests/
+│   │   │   ├── admin.test.ts
+│   │   │   ├── auth.test.ts
+│   │   │   ├── comments.test.ts
+│   │   │   ├── posts.test.ts
+│   │   │   └── setup.ts
+│   │   ├── types/express.d.ts
+│   │   ├── utils/
+│   │   │   ├── ApiError.ts
+│   │   │   ├── ApiResponse.ts
+│   │   │   ├── catchAsync.ts
+│   │   │   ├── cookieOptions.ts
+│   │   │   ├── email.ts
+│   │   │   ├── jwt.ts
+│   │   │   ├── logger.ts
+│   │   │   └── slugify.ts
+│   │   ├── validators/
+│   │   │   ├── auth.validator.ts
+│   │   │   ├── comment.validator.ts
+│   │   │   └── post.validator.ts
+│   │   ├── app.ts
+│   │   └── server.ts
+│   ├── .env.example
+│   ├── jest.config.js
+│   ├── nodemon.json
+│   ├── package.json
+│   ├── package-lock.json
 │   └── tsconfig.json
-│
-└── client/                        # React 19 + Vite + TypeScript Frontend
-    ├── src/
-    │   ├── api/                   # Axios instance with interceptors & endpoints
-    │   ├── components/
-    │   │   ├── ui/                # Button, Input, Card, Badge (Shadcn style)
-    │   │   ├── layout/            # Navbar, footer
-    │   │   ├── posts/             # PostCard, PostList
-    │   │   └── comments/          # CommentItem, comment forms
-    │   ├── hooks/                 # React Query custom hooks
-    │   ├── interfaces/            # Shared data contracts
-    │   ├── pages/
-    │   │   ├── HomePage.tsx       # Paginated posts display
-    │   │   ├── LoginPage.tsx      # Sign in & OAuth buttons
-    │   │   ├── RegisterPage.tsx   # Sign up with Zod validation
-    │   │   ├── PostDetailPage.tsx # Post view with comments section
-    │   │   ├── CreatePostPage.tsx # Article authoring
-    │   │   ├── EditPostPage.tsx   # Article editing
-    │   │   └── admin/             # Dashboard, Users & Posts management
-    │   ├── routes/                # ProtectedRoute, AdminRoute, AppRouter
-    │   ├── store/                 # Auth Context Provider (user state in memory)
-    │   ├── main.tsx
-    │   └── index.css
-    ├── package.json
-    ├── tailwind.config.ts
-    └── vite.config.ts
+├── .gitignore
+├── README.md
+└── TEST_CASES.md
 ```
 
 ---
@@ -86,42 +198,97 @@ blog_post_mern/
 
 ### Prerequisites
 - **Node.js** (v18.0.0 or higher)
-- **MongoDB** (local community server running at `mongodb://127.0.0.1:27017` or MongoDB Atlas URI)
+- **MongoDB** (local server or MongoDB Atlas URI)
 
-### 1. Server Setup
-```bash
-cd server
+### 1. Configure and run the server (PowerShell)
 
-# Install dependencies
+From the repository root:
+
+```powershell
+Set-Location .\server
+
 npm install
-
-# Copy environment template, then replace the example values with unique secrets
-cp .env.example .env
-
-# Set ADMIN_EMAIL and ADMIN_PASSWORD in .env before seeding.
-# Use a unique, strong password; the seeder has no built-in admin credentials.
-
-# Run database seeder (creates the configured admin and sample posts/comments)
+Copy-Item .env.example .env
+notepad .env
 npm run seed
-
-# Start development server
 npm run dev
 ```
-The server will start on `http://localhost:5000` with API root at `http://localhost:5000/api/v1`.
+The server runs at `http://localhost:5000`, with API routes under
+`http://localhost:5000/api/v1`. Edit `server/.env` and set the required variables
+before starting the server or running the seeder.
 
-The seeder creates an admin account using `ADMIN_EMAIL` and `ADMIN_PASSWORD` from
-`server/.env`. It also adds sample posts and comments if no active posts exist.
-No default account password is shipped with the project.
+#### Server environment variables
 
-Password recovery emails use Gmail SMTP. In `server/.env`, set
-`SMTP_USER` and `SMTP_FROM` to your Gmail address and `SMTP_PASSWORD` to a
-Google App Password (not your regular Gmail password). To create one, enable
-2-Step Verification on the Google account, then create an App Password under
-Google Account → Security. The SMTP host, port, and TLS settings are shown in
-`server/.env.example`. Restart the server after changing the settings.
+This table documents every variable in [`/.env.example`]
 
-Reset links expire after one hour and can only be used once. Keep the App
-Password private and never commit `server/.env`.
+| Variable | Required | Purpose / default |
+|---|---|---|
+| `NODE_ENV` | No | Runtime mode; defaults to `development`. |
+| `PORT` | No | API port; defaults to `5000`. |
+| `MONGODB_URI` | Yes | MongoDB connection string, e.g. `mongodb://127.0.0.1:27017/blog_mern`. |
+| `JWT_ACCESS_SECRET` | Yes | Private secret used to sign access tokens. |
+| `JWT_REFRESH_SECRET` | Yes | Different private secret used to sign refresh tokens. |
+| `JWT_ACCESS_EXPIRES_IN` | No | Access-token expiry; defaults to `15m`. |
+| `JWT_REFRESH_EXPIRES_IN` | No | Refresh-token expiry; defaults to `7d`. |
+| `CLIENT_URL` | No | Client origin used in reset emails; defaults to `http://localhost:5173`. |
+| `GOOGLE_CLIENT_ID` | No | Google OAuth client ID; configure with `GOOGLE_CLIENT_SECRET` to enable Google OAuth. |
+| `GOOGLE_CLIENT_SECRET` | No | Google OAuth client secret. |
+| `GOOGLE_CALLBACK_URL` | No | Google OAuth callback; defaults to `http://localhost:5000/api/v1/auth/google/callback`. |
+| `FACEBOOK_APP_ID` | No | Facebook OAuth app ID; configure with `FACEBOOK_APP_SECRET` to enable Facebook OAuth. |
+| `FACEBOOK_APP_SECRET` | No | Facebook OAuth app secret. |
+| `SMTP_HOST` | For reset email | SMTP server, e.g. `smtp.gmail.com`. |
+| `SMTP_PORT` | No | SMTP port; defaults to `587`. |
+| `SMTP_SECURE` | No | Set `true` for implicit TLS (commonly port `465`); otherwise `false`. |
+| `SMTP_USER` | For authenticated SMTP | Set together with `SMTP_PASSWORD`, or leave both empty. |
+| `SMTP_PASSWORD` | For authenticated SMTP | SMTP credential. For Gmail, use a Google App Password, not the regular account password. |
+| `SMTP_FROM` | For reset email | Sender address; defaults to `SMTP_USER`. |
+| `ADMIN_EMAIL` | For seeding | Email for the seeded administrator. |
+| `ADMIN_PASSWORD` | For seeding | Password for the seeded administrator; choose a private strong value. |
+| `USER_EMAIL` | For seeding | Email for the seeded regular user. |
+| `USER_PASSWORD` | For seeding | Password for the seeded regular user; choose a different private strong value. |
+
+`MONGODB_URI`, `JWT_ACCESS_SECRET`, and `JWT_REFRESH_SECRET` are required to
+start the server. Generate two different JWT secrets locally, for example by
+running `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
+twice. Never commit your populated `.env` file or share its secrets.
+
+#### Seed login accounts
+
+The template uses these example email addresses:
+
+| Role | Example email | Password |
+|---|---|---|
+| Admin | `admin@example.com` (`ADMIN_EMAIL`) | Set a private strong value in `ADMIN_PASSWORD`. |
+| Regular user | `user@example.com` (`USER_EMAIL`) | Set a different private strong value in `USER_PASSWORD`. |
+
+No reusable passwords are committed to this repository. Choose passwords of at
+least 8 characters that include an uppercase letter, a number, and a special
+character. The seeder refuses to run if these four account variables are
+missing, if both emails are the same, or if either password fails the policy.
+
+Run `npm run seed` from `server/`. It creates the admin and regular user if their
+emails do not already exist. It also creates three sample posts and comments
+when the database has no active posts. Existing accounts are not given a new
+password by rerunning the seeder; for predictable review credentials, use a
+fresh local/test database and the values configured in `server/.env`.
+
+Password reset email is optional for local development. To enable it with Gmail,
+set `SMTP_USER` and `SMTP_FROM` to the Gmail address and `SMTP_PASSWORD` to a
+Google App Password (not the regular Gmail password). Reset links expire after
+one hour and can only be used once.
+
+### 2. Run the client
+
+Open a second terminal at the repository root:
+
+```powershell
+Set-Location .\client
+npm install
+npm run dev
+```
+
+The client runs at `http://localhost:5173`. No client-side environment variables
+are required for the local Vite setup.
 
 ---
 
@@ -134,18 +301,6 @@ The complete interactive Swagger UI is served automatically by the backend serve
 You can explore all endpoints, schemas, parameters, and directly test requests via the Swagger UI interface.
 
 ---
-
-### 2. Client Setup
-```bash
-cd client
-
-# Install dependencies
-npm install
-
-# Start Vite development server
-npm run dev
-```
-The frontend application will be live at `http://localhost:5173`.
 
 ---
 
@@ -189,54 +344,43 @@ All API endpoints are prefixed with `/api/v1`.
 | `GET` | `/admin/stats` | Aggregated metrics (users, posts, comments) | Admin Role Only |
 | `GET` | `/admin/users?page=1` | Paginated list of all users | Admin Role Only |
 | `GET` | `/admin/posts?page=1` | Paginated list of all posts (including deleted) | Admin Role Only |
+| `GET` | `/admin/comments?page=1` | Paginated list of comments | Admin Role Only |
 | `DELETE`| `/admin/users/:id` | Delete user account | Admin Role Only |
 | `DELETE`| `/admin/posts/:id` | Moderate/delete any post | Admin Role Only |
+| `DELETE`| `/admin/comments/:id` | Delete any comment | Admin Role Only |
 
 ---
 
-## 🧪 Testing & Scenarios
+## 🧪 Testing
 
-Run the full automated backend test suite (32 unit & integration test scenarios):
-```bash
-cd server
-npm test
+The backend uses **Jest** and **Supertest**. There are currently 42 API test
+cases across authentication, posts, comments, and admin/RBAC suites. The complete
+test-by-test inventory and expected results are in [TEST_CASES.md](./TEST_CASES.md).
+The frontend does not currently have an automated test suite.
+
+Run tests from `server/` against a disposable test database. The test setup
+loads `server/.env`, so explicitly override `MONGODB_URI` to avoid using your
+development database:
+
+```powershell
+Set-Location .\server
+$env:MONGODB_URI = "mongodb://127.0.0.1:27017/blog_mern_test"
+npm test -- --runInBand
 ```
 
-### Tested Scenarios:
-1. **Authentication Suite (`auth.test.ts`)**:
-   - Validation failures on missing required registration fields (`422`)
-   - Validation failure on malformed email address (`422`)
-   - Validation failure on weak password missing uppercase or digit (`422`)
-   - Validation failure on empty login payload (`422`)
-   - Auth rejection when access cookie is absent (`401`)
-   - Health check endpoint (`200 OK`)
-   - Swagger OpenAPI JSON specification endpoint validation (`200 OK`)
-   - Swagger UI endpoint validation (`200 OK`)
-2. **Posts Suite (`posts.test.ts`)**:
-   - Public retrieval of paginated articles with page/limit metadata (`200 OK`)
-   - Pagination parameter customization (`?page=2&limit=5`)
-   - Protected creation rejection without cookie (`401`)
-   - Zod validation for short title (`< 3` chars) (`422`)
-   - Zod validation for short content (`< 10` chars) (`422`)
-   - Non-existent article slug handling (`404 Not Found`)
-   - Protected update rejection without auth (`401`)
-   - Protected delete rejection without auth (`401`)
-3. **Comments Suite (`comments.test.ts`)**:
-   - Query comments on non-existent post (`404 Not Found`)
-   - Unauthenticated comment creation attempt (`401`)
-   - Empty comment content validation rejection (`422`)
-   - Unauthenticated comment update rejection (`401`)
-   - Unauthenticated comment deletion rejection (`401`)
-4. **Admin Panel & RBAC Suite (`admin.test.ts`)**:
-   - Unauthenticated stats access rejection (`401`)
-   - **RBAC verification**: Regular user access rejection to admin stats (`403 Forbidden`)
-   - **Admin access**: Verified admin role token accessing platform stats (`200 OK`)
-   - Unauthenticated user list retrieval (`401`)
-   - **RBAC verification**: Regular user access rejection to user list (`403 Forbidden`)
-   - **Admin access**: Admin token successfully retrieving all users list (`200 OK`)
-   - Unauthenticated posts moderation list (`401`)
-   - **RBAC verification**: Regular user access rejection to all posts list (`403 Forbidden`)
-   - **Admin access**: Admin token successfully retrieving all posts list (`200 OK`)
-   - Regular user prohibited from deleting user accounts (`403 Forbidden`)
-   - Regular user prohibited from deleting arbitrary posts (`403 Forbidden`)
+Generate a coverage report:
+
+```powershell
+$env:MONGODB_URI = "mongodb://127.0.0.1:27017/blog_mern_test"
+npm run test:coverage -- --runInBand
+```
+
+The report is written to `server/coverage/`, which is ignored by Git. Coverage
+collection is configured, but the project does not currently enforce a minimum
+coverage percentage. The last measured baseline was 56.70% statements, 55.65%
+lines, 35.39% branches, and 40.56% functions. See the coverage gaps in
+[TEST_CASES.md](./TEST_CASES.md) for areas needing additional tests. Tests that
+query MongoDB require the test database to be available. The multipart post
+test removes its inserted post and uploaded file afterward; still, never point
+tests at a production database.
 

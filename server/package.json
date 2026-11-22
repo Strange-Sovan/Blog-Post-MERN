@@ -8,7 +8,8 @@
     "seed": "ts-node src/seeders/adminSeeder.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
