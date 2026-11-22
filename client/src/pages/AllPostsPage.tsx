@@ -5,11 +5,10 @@ import { usePosts } from '@/hooks/usePosts';
 import { PostCard } from '@/components/posts/PostCard';
 import { Button } from '@/components/ui/button';
 
-const PAGE_SIZE = 9;
-
 export const AllPostsPage: React.FC = () => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = usePosts(page, PAGE_SIZE);
+  const [limit, setLimit] = useState(10);
+  const { data, isLoading, isError } = usePosts(page, limit);
   const posts = data?.data || [];
   const meta = data?.meta;
 
@@ -18,7 +17,7 @@ export const AllPostsPage: React.FC = () => {
       <div className="page-shell">
         <div className="mb-8 h-24 animate-pulse rounded-2xl bg-gradient-to-r from-violet-100 to-indigo-100" />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: PAGE_SIZE }).map((_, index) => (
+          {Array.from({ length: limit }).map((_, index) => (
             <div key={index} className="h-72 animate-pulse rounded-2xl bg-gradient-to-br from-slate-100 to-indigo-100" />
           ))}
         </div>
@@ -70,29 +69,46 @@ export const AllPostsPage: React.FC = () => {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => <PostCard key={post._id} post={post} />)}
           </div>
-          {meta && meta.totalPages > 1 && (
-            <div className="mt-12 flex items-center justify-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!meta.hasPrevPage}
-                onClick={() => setPage((currentPage) => currentPage - 1)}
-                className="rounded-xl px-5"
-              >
-                ← Previous
-              </Button>
-              <span className="rounded-xl border border-white/80 bg-white/80 px-4 py-1.5 text-sm font-semibold text-muted-foreground shadow-sm">
-                Page {meta.page} of {meta.totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!meta.hasNextPage}
-                onClick={() => setPage((currentPage) => currentPage + 1)}
-                className="rounded-xl px-5"
-              >
-                Next →
-              </Button>
+          {meta && (
+            <div className="mt-12 flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <label className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                Posts per page
+                <select
+                  value={limit}
+                  onChange={(event) => {
+                    setLimit(Number(event.currentTarget.value));
+                    setPage(1);
+                  }}
+                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-700"
+                >
+                  {[5, 10, 20, 50, 100].map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!meta.hasPrevPage}
+                  onClick={() => setPage((currentPage) => currentPage - 1)}
+                  className="rounded-xl px-5"
+                >
+                  ← Previous
+                </Button>
+                <span className="rounded-xl border border-white/80 bg-white/80 px-4 py-1.5 text-sm font-semibold text-muted-foreground shadow-sm">
+                  Page {meta.page} of {Math.max(meta.totalPages, 1)}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!meta.hasNextPage}
+                  onClick={() => setPage((currentPage) => currentPage + 1)}
+                  className="rounded-xl px-5"
+                >
+                  Next →
+                </Button>
+              </div>
             </div>
           )}
         </>

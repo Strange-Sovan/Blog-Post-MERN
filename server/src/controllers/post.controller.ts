@@ -21,7 +21,7 @@ export const createPostController = catchAsync(async (req: IAuthRequest, res: Re
 
 export const getPostsController = catchAsync(async (req: IAuthRequest, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
-  const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+  const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
   const { posts, meta } = await getPosts(page, limit);
   ApiResponse.send(res, HttpStatus.OK, Messages.POSTS_FETCHED, posts, meta);
 });

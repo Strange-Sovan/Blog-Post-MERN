@@ -32,6 +32,12 @@ describe('Posts API Scenarios', () => {
       expect(res.body.meta.page).toBe(2);
       expect(res.body.meta.limit).toBe(5);
     });
+
+    it('should allow a page size of 100', async () => {
+      const res = await request(app).get('/api/v1/posts?page=1&limit=100');
+      expect(res.status).toBe(200);
+      expect(res.body.meta.limit).toBe(100);
+    });
   });
 
   describe('POST /api/v1/posts (Protected)', () => {
